@@ -28,6 +28,7 @@ object Struthio extends Build {
       "com.twitter" %% "ostrich" % "9.1.0" cross CrossVersion.binary
     ))
     .settings(sharedSettings: _*)
+    .dependsOn(thrift)
 
   lazy val thrift = quickProject("thrift")
     .settings(sharedSettings: _*)

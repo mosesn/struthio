@@ -21,51 +21,59 @@ import java.util.Arrays
 import org.apache.thrift.transport.{TMemoryBuffer, TMemoryInputTransport, TTransport}
 
 
-@javax.annotation.Generated(value = Array("com.twitter.scrooge.Compiler"), date = "2013-05-12T19:13:04.941-0400")
+@javax.annotation.Generated(value = Array("com.twitter.scrooge.Compiler"), date = "2013-05-13T01:32:35.563-0400")
 object StatsService {
   trait Iface {
     
-    def sendStats(stats: Map[String, Double] = Map[String, Double]()): Unit
+    def syncCounters(counters: Map[String, Long] = Map[String, Long]()): Unit
     
-    def sendStatuses(statuses: Map[String, String] = Map[String, String]()): Unit
+    def syncMetrics(metrics: Map[String, Distribution] = Map[String, Distribution]()): Unit
+    
+    def syncGauges(gauges: Map[String, Double] = Map[String, Double]()): Unit
+    
+    def syncLabels(labels: Map[String, String] = Map[String, String]()): Unit
   }
 
   trait FutureIface {
     
-    def sendStats(stats: Map[String, Double] = Map[String, Double]()): Future[Unit]
+    def syncCounters(counters: Map[String, Long] = Map[String, Long]()): Future[Unit]
     
-    def sendStatuses(statuses: Map[String, String] = Map[String, String]()): Future[Unit]
+    def syncMetrics(metrics: Map[String, Distribution] = Map[String, Distribution]()): Future[Unit]
+    
+    def syncGauges(gauges: Map[String, Double] = Map[String, Double]()): Future[Unit]
+    
+    def syncLabels(labels: Map[String, String] = Map[String, String]()): Future[Unit]
   }
 
   
-  object sendStats$args extends ThriftStructCodec3[sendStats$args] {
-    val Struct = new TStruct("sendStats_args")
-    val StatsField = new TField("stats", TType.MAP, 1)
+  object syncCounters$args extends ThriftStructCodec3[syncCounters$args] {
+    val Struct = new TStruct("syncCounters_args")
+    val CountersField = new TField("counters", TType.MAP, 1)
   
     /**
      * Checks that all required fields are non-null.
      */
-    def validate(_item: sendStats$args) {
+    def validate(_item: syncCounters$args) {
     }
   
-    override def encode(_item: sendStats$args, _oproto: TProtocol) { _item.write(_oproto) }
+    override def encode(_item: syncCounters$args, _oproto: TProtocol) { _item.write(_oproto) }
     override def decode(_iprot: TProtocol) = Immutable.decode(_iprot)
   
-    def apply(_iprot: TProtocol): sendStats$args = decode(_iprot)
+    def apply(_iprot: TProtocol): syncCounters$args = decode(_iprot)
   
     def apply(
-      stats: Map[String, Double] = Map[String, Double]()
-    ): sendStats$args = new Immutable(
-      stats
+      counters: Map[String, Long] = Map[String, Long]()
+    ): syncCounters$args = new Immutable(
+      counters
     )
   
-    def unapply(_item: sendStats$args): Option[Map[String, Double]] = Some(_item.stats)
+    def unapply(_item: syncCounters$args): Option[Map[String, Long]] = Some(_item.counters)
   
-    object Immutable extends ThriftStructCodec3[sendStats$args] {
-      override def encode(_item: sendStats$args, _oproto: TProtocol) { _item.write(_oproto) }
+    object Immutable extends ThriftStructCodec3[syncCounters$args] {
+      override def encode(_item: syncCounters$args, _oproto: TProtocol) { _item.write(_oproto) }
       override def decode(_iprot: TProtocol) = {
-        var stats: Map[String, Double] = Map[String, Double]()
-        var _got_stats = false
+        var counters: Map[String, Long] = Map[String, Long]()
+        var _got_counters = false
         var _done = false
         _iprot.readStructBegin()
         while (!_done) {
@@ -74,10 +82,466 @@ object StatsService {
             _done = true
           } else {
             _field.id match {
-              case 1 => { /* stats */
+              case 1 => { /* counters */
                 _field.`type` match {
                   case TType.MAP => {
-                    stats = {
+                    counters = {
+                      val _map = _iprot.readMapBegin()
+                      val _rv = new mutable.HashMap[String, Long]
+                      var _i = 0
+                      while (_i < _map.size) {
+                        val _key = {
+                          _iprot.readString()
+                        }
+                        val _value = {
+                          _iprot.readI64()
+                        }
+                        _rv(_key) = _value
+                        _i += 1
+                      }
+                      _iprot.readMapEnd()
+                      _rv
+                    }
+                    _got_counters = true
+                  }
+                  case _ => TProtocolUtil.skip(_iprot, _field.`type`)
+                }
+              }
+              case _ => TProtocolUtil.skip(_iprot, _field.`type`)
+            }
+            _iprot.readFieldEnd()
+          }
+        }
+        _iprot.readStructEnd()
+        new Immutable(
+          counters
+        )
+      }
+    }
+  
+    /**
+     * The default read-only implementation of syncCounters$args.  You typically should not need to
+     * directly reference this class; instead, use the syncCounters$args.apply method to construct
+     * new instances.
+     */
+    class Immutable(
+      val counters: Map[String, Long] = Map[String, Long]()
+    ) extends syncCounters$args
+  
+  }
+  
+  trait syncCounters$args extends ThriftStruct
+    with Product1[Map[String, Long]]
+    with java.io.Serializable
+  {
+    import syncCounters$args._
+  
+    def counters: Map[String, Long]
+  
+    def _1 = counters
+  
+    override def write(_oprot: TProtocol) {
+      syncCounters$args.validate(this)
+      _oprot.writeStructBegin(Struct)
+      if (true) {
+        val counters_item = counters
+        _oprot.writeFieldBegin(CountersField)
+        _oprot.writeMapBegin(new TMap(TType.STRING, TType.I64, counters_item.size))
+        counters_item.foreach { _pair =>
+          val counters_item_key = _pair._1
+          val counters_item_value = _pair._2
+          _oprot.writeString(counters_item_key)
+          _oprot.writeI64(counters_item_value)
+        }
+        _oprot.writeMapEnd()
+        _oprot.writeFieldEnd()
+      }
+      _oprot.writeFieldStop()
+      _oprot.writeStructEnd()
+    }
+  
+    def copy(
+      counters: Map[String, Long] = this.counters
+    ): syncCounters$args = new Immutable(
+      counters
+    )
+  
+    override def canEqual(other: Any): Boolean = other.isInstanceOf[syncCounters$args]
+  
+    override def equals(other: Any): Boolean = runtime.ScalaRunTime._equals(this, other)
+  
+    override def hashCode: Int = runtime.ScalaRunTime._hashCode(this)
+  
+    override def toString: String = runtime.ScalaRunTime._toString(this)
+  
+  
+    override def productArity: Int = 1
+  
+    override def productElement(n: Int): Any = n match {
+      case 0 => counters
+      case _ => throw new IndexOutOfBoundsException(n.toString)
+    }
+  
+    override def productPrefix: String = "syncCounters$args"
+  }
+  
+  object syncCounters$result extends ThriftStructCodec3[syncCounters$result] {
+    val Struct = new TStruct("syncCounters_result")
+  
+    /**
+     * Checks that all required fields are non-null.
+     */
+    def validate(_item: syncCounters$result) {
+    }
+  
+    override def encode(_item: syncCounters$result, _oproto: TProtocol) { _item.write(_oproto) }
+    override def decode(_iprot: TProtocol) = Immutable.decode(_iprot)
+  
+    def apply(_iprot: TProtocol): syncCounters$result = decode(_iprot)
+  
+    def apply(
+    ): syncCounters$result = new Immutable(
+    )
+  
+    def unapply(_item: syncCounters$result): Boolean = true
+  
+    object Immutable extends ThriftStructCodec3[syncCounters$result] {
+      override def encode(_item: syncCounters$result, _oproto: TProtocol) { _item.write(_oproto) }
+      override def decode(_iprot: TProtocol) = {
+        var _done = false
+        _iprot.readStructBegin()
+        while (!_done) {
+          val _field = _iprot.readFieldBegin()
+          if (_field.`type` == TType.STOP) {
+            _done = true
+          } else {
+            _field.id match {
+              case _ => TProtocolUtil.skip(_iprot, _field.`type`)
+            }
+            _iprot.readFieldEnd()
+          }
+        }
+        _iprot.readStructEnd()
+        new Immutable(
+        )
+      }
+    }
+  
+    /**
+     * The default read-only implementation of syncCounters$result.  You typically should not need to
+     * directly reference this class; instead, use the syncCounters$result.apply method to construct
+     * new instances.
+     */
+    class Immutable(
+    ) extends syncCounters$result
+  
+  }
+  
+  trait syncCounters$result extends ThriftStruct
+    with Product
+    with java.io.Serializable
+  {
+    import syncCounters$result._
+  
+  
+  
+    override def write(_oprot: TProtocol) {
+      syncCounters$result.validate(this)
+      _oprot.writeStructBegin(Struct)
+      _oprot.writeFieldStop()
+      _oprot.writeStructEnd()
+    }
+  
+    def copy(
+    ): syncCounters$result = new Immutable(
+    )
+  
+    override def canEqual(other: Any): Boolean = other.isInstanceOf[syncCounters$result]
+  
+    override def equals(other: Any): Boolean = runtime.ScalaRunTime._equals(this, other)
+  
+    override def hashCode: Int = runtime.ScalaRunTime._hashCode(this)
+  
+    override def toString: String = runtime.ScalaRunTime._toString(this)
+  
+  
+    override def productArity: Int = 0
+  
+    override def productElement(n: Int): Any = n match {
+      case _ => throw new IndexOutOfBoundsException(n.toString)
+    }
+  
+    override def productPrefix: String = "syncCounters$result"
+  }
+  
+  object syncMetrics$args extends ThriftStructCodec3[syncMetrics$args] {
+    val Struct = new TStruct("syncMetrics_args")
+    val MetricsField = new TField("metrics", TType.MAP, 1)
+  
+    /**
+     * Checks that all required fields are non-null.
+     */
+    def validate(_item: syncMetrics$args) {
+    }
+  
+    override def encode(_item: syncMetrics$args, _oproto: TProtocol) { _item.write(_oproto) }
+    override def decode(_iprot: TProtocol) = Immutable.decode(_iprot)
+  
+    def apply(_iprot: TProtocol): syncMetrics$args = decode(_iprot)
+  
+    def apply(
+      metrics: Map[String, Distribution] = Map[String, Distribution]()
+    ): syncMetrics$args = new Immutable(
+      metrics
+    )
+  
+    def unapply(_item: syncMetrics$args): Option[Map[String, Distribution]] = Some(_item.metrics)
+  
+    object Immutable extends ThriftStructCodec3[syncMetrics$args] {
+      override def encode(_item: syncMetrics$args, _oproto: TProtocol) { _item.write(_oproto) }
+      override def decode(_iprot: TProtocol) = {
+        var metrics: Map[String, Distribution] = Map[String, Distribution]()
+        var _got_metrics = false
+        var _done = false
+        _iprot.readStructBegin()
+        while (!_done) {
+          val _field = _iprot.readFieldBegin()
+          if (_field.`type` == TType.STOP) {
+            _done = true
+          } else {
+            _field.id match {
+              case 1 => { /* metrics */
+                _field.`type` match {
+                  case TType.MAP => {
+                    metrics = {
+                      val _map = _iprot.readMapBegin()
+                      val _rv = new mutable.HashMap[String, Distribution]
+                      var _i = 0
+                      while (_i < _map.size) {
+                        val _key = {
+                          _iprot.readString()
+                        }
+                        val _value = {
+                          Distribution.decode(_iprot)
+                        }
+                        _rv(_key) = _value
+                        _i += 1
+                      }
+                      _iprot.readMapEnd()
+                      _rv
+                    }
+                    _got_metrics = true
+                  }
+                  case _ => TProtocolUtil.skip(_iprot, _field.`type`)
+                }
+              }
+              case _ => TProtocolUtil.skip(_iprot, _field.`type`)
+            }
+            _iprot.readFieldEnd()
+          }
+        }
+        _iprot.readStructEnd()
+        new Immutable(
+          metrics
+        )
+      }
+    }
+  
+    /**
+     * The default read-only implementation of syncMetrics$args.  You typically should not need to
+     * directly reference this class; instead, use the syncMetrics$args.apply method to construct
+     * new instances.
+     */
+    class Immutable(
+      val metrics: Map[String, Distribution] = Map[String, Distribution]()
+    ) extends syncMetrics$args
+  
+  }
+  
+  trait syncMetrics$args extends ThriftStruct
+    with Product1[Map[String, Distribution]]
+    with java.io.Serializable
+  {
+    import syncMetrics$args._
+  
+    def metrics: Map[String, Distribution]
+  
+    def _1 = metrics
+  
+    override def write(_oprot: TProtocol) {
+      syncMetrics$args.validate(this)
+      _oprot.writeStructBegin(Struct)
+      if (true) {
+        val metrics_item = metrics
+        _oprot.writeFieldBegin(MetricsField)
+        _oprot.writeMapBegin(new TMap(TType.STRING, TType.STRUCT, metrics_item.size))
+        metrics_item.foreach { _pair =>
+          val metrics_item_key = _pair._1
+          val metrics_item_value = _pair._2
+          _oprot.writeString(metrics_item_key)
+          metrics_item_value.write(_oprot)
+        }
+        _oprot.writeMapEnd()
+        _oprot.writeFieldEnd()
+      }
+      _oprot.writeFieldStop()
+      _oprot.writeStructEnd()
+    }
+  
+    def copy(
+      metrics: Map[String, Distribution] = this.metrics
+    ): syncMetrics$args = new Immutable(
+      metrics
+    )
+  
+    override def canEqual(other: Any): Boolean = other.isInstanceOf[syncMetrics$args]
+  
+    override def equals(other: Any): Boolean = runtime.ScalaRunTime._equals(this, other)
+  
+    override def hashCode: Int = runtime.ScalaRunTime._hashCode(this)
+  
+    override def toString: String = runtime.ScalaRunTime._toString(this)
+  
+  
+    override def productArity: Int = 1
+  
+    override def productElement(n: Int): Any = n match {
+      case 0 => metrics
+      case _ => throw new IndexOutOfBoundsException(n.toString)
+    }
+  
+    override def productPrefix: String = "syncMetrics$args"
+  }
+  
+  object syncMetrics$result extends ThriftStructCodec3[syncMetrics$result] {
+    val Struct = new TStruct("syncMetrics_result")
+  
+    /**
+     * Checks that all required fields are non-null.
+     */
+    def validate(_item: syncMetrics$result) {
+    }
+  
+    override def encode(_item: syncMetrics$result, _oproto: TProtocol) { _item.write(_oproto) }
+    override def decode(_iprot: TProtocol) = Immutable.decode(_iprot)
+  
+    def apply(_iprot: TProtocol): syncMetrics$result = decode(_iprot)
+  
+    def apply(
+    ): syncMetrics$result = new Immutable(
+    )
+  
+    def unapply(_item: syncMetrics$result): Boolean = true
+  
+    object Immutable extends ThriftStructCodec3[syncMetrics$result] {
+      override def encode(_item: syncMetrics$result, _oproto: TProtocol) { _item.write(_oproto) }
+      override def decode(_iprot: TProtocol) = {
+        var _done = false
+        _iprot.readStructBegin()
+        while (!_done) {
+          val _field = _iprot.readFieldBegin()
+          if (_field.`type` == TType.STOP) {
+            _done = true
+          } else {
+            _field.id match {
+              case _ => TProtocolUtil.skip(_iprot, _field.`type`)
+            }
+            _iprot.readFieldEnd()
+          }
+        }
+        _iprot.readStructEnd()
+        new Immutable(
+        )
+      }
+    }
+  
+    /**
+     * The default read-only implementation of syncMetrics$result.  You typically should not need to
+     * directly reference this class; instead, use the syncMetrics$result.apply method to construct
+     * new instances.
+     */
+    class Immutable(
+    ) extends syncMetrics$result
+  
+  }
+  
+  trait syncMetrics$result extends ThriftStruct
+    with Product
+    with java.io.Serializable
+  {
+    import syncMetrics$result._
+  
+  
+  
+    override def write(_oprot: TProtocol) {
+      syncMetrics$result.validate(this)
+      _oprot.writeStructBegin(Struct)
+      _oprot.writeFieldStop()
+      _oprot.writeStructEnd()
+    }
+  
+    def copy(
+    ): syncMetrics$result = new Immutable(
+    )
+  
+    override def canEqual(other: Any): Boolean = other.isInstanceOf[syncMetrics$result]
+  
+    override def equals(other: Any): Boolean = runtime.ScalaRunTime._equals(this, other)
+  
+    override def hashCode: Int = runtime.ScalaRunTime._hashCode(this)
+  
+    override def toString: String = runtime.ScalaRunTime._toString(this)
+  
+  
+    override def productArity: Int = 0
+  
+    override def productElement(n: Int): Any = n match {
+      case _ => throw new IndexOutOfBoundsException(n.toString)
+    }
+  
+    override def productPrefix: String = "syncMetrics$result"
+  }
+  
+  object syncGauges$args extends ThriftStructCodec3[syncGauges$args] {
+    val Struct = new TStruct("syncGauges_args")
+    val GaugesField = new TField("gauges", TType.MAP, 1)
+  
+    /**
+     * Checks that all required fields are non-null.
+     */
+    def validate(_item: syncGauges$args) {
+    }
+  
+    override def encode(_item: syncGauges$args, _oproto: TProtocol) { _item.write(_oproto) }
+    override def decode(_iprot: TProtocol) = Immutable.decode(_iprot)
+  
+    def apply(_iprot: TProtocol): syncGauges$args = decode(_iprot)
+  
+    def apply(
+      gauges: Map[String, Double] = Map[String, Double]()
+    ): syncGauges$args = new Immutable(
+      gauges
+    )
+  
+    def unapply(_item: syncGauges$args): Option[Map[String, Double]] = Some(_item.gauges)
+  
+    object Immutable extends ThriftStructCodec3[syncGauges$args] {
+      override def encode(_item: syncGauges$args, _oproto: TProtocol) { _item.write(_oproto) }
+      override def decode(_iprot: TProtocol) = {
+        var gauges: Map[String, Double] = Map[String, Double]()
+        var _got_gauges = false
+        var _done = false
+        _iprot.readStructBegin()
+        while (!_done) {
+          val _field = _iprot.readFieldBegin()
+          if (_field.`type` == TType.STOP) {
+            _done = true
+          } else {
+            _field.id match {
+              case 1 => { /* gauges */
+                _field.`type` match {
+                  case TType.MAP => {
+                    gauges = {
                       val _map = _iprot.readMapBegin()
                       val _rv = new mutable.HashMap[String, Double]
                       var _i = 0
@@ -94,7 +558,7 @@ object StatsService {
                       _iprot.readMapEnd()
                       _rv
                     }
-                    _got_stats = true
+                    _got_gauges = true
                   }
                   case _ => TProtocolUtil.skip(_iprot, _field.`type`)
                 }
@@ -106,44 +570,44 @@ object StatsService {
         }
         _iprot.readStructEnd()
         new Immutable(
-          stats
+          gauges
         )
       }
     }
   
     /**
-     * The default read-only implementation of sendStats$args.  You typically should not need to
-     * directly reference this class; instead, use the sendStats$args.apply method to construct
+     * The default read-only implementation of syncGauges$args.  You typically should not need to
+     * directly reference this class; instead, use the syncGauges$args.apply method to construct
      * new instances.
      */
     class Immutable(
-      val stats: Map[String, Double] = Map[String, Double]()
-    ) extends sendStats$args
+      val gauges: Map[String, Double] = Map[String, Double]()
+    ) extends syncGauges$args
   
   }
   
-  trait sendStats$args extends ThriftStruct
+  trait syncGauges$args extends ThriftStruct
     with Product1[Map[String, Double]]
     with java.io.Serializable
   {
-    import sendStats$args._
+    import syncGauges$args._
   
-    def stats: Map[String, Double]
+    def gauges: Map[String, Double]
   
-    def _1 = stats
+    def _1 = gauges
   
     override def write(_oprot: TProtocol) {
-      sendStats$args.validate(this)
+      syncGauges$args.validate(this)
       _oprot.writeStructBegin(Struct)
       if (true) {
-        val stats_item = stats
-        _oprot.writeFieldBegin(StatsField)
-        _oprot.writeMapBegin(new TMap(TType.STRING, TType.DOUBLE, stats_item.size))
-        stats_item.foreach { _pair =>
-          val stats_item_key = _pair._1
-          val stats_item_value = _pair._2
-          _oprot.writeString(stats_item_key)
-          _oprot.writeDouble(stats_item_value)
+        val gauges_item = gauges
+        _oprot.writeFieldBegin(GaugesField)
+        _oprot.writeMapBegin(new TMap(TType.STRING, TType.DOUBLE, gauges_item.size))
+        gauges_item.foreach { _pair =>
+          val gauges_item_key = _pair._1
+          val gauges_item_value = _pair._2
+          _oprot.writeString(gauges_item_key)
+          _oprot.writeDouble(gauges_item_value)
         }
         _oprot.writeMapEnd()
         _oprot.writeFieldEnd()
@@ -153,12 +617,12 @@ object StatsService {
     }
   
     def copy(
-      stats: Map[String, Double] = this.stats
-    ): sendStats$args = new Immutable(
-      stats
+      gauges: Map[String, Double] = this.gauges
+    ): syncGauges$args = new Immutable(
+      gauges
     )
   
-    override def canEqual(other: Any): Boolean = other.isInstanceOf[sendStats$args]
+    override def canEqual(other: Any): Boolean = other.isInstanceOf[syncGauges$args]
   
     override def equals(other: Any): Boolean = runtime.ScalaRunTime._equals(this, other)
   
@@ -170,35 +634,35 @@ object StatsService {
     override def productArity: Int = 1
   
     override def productElement(n: Int): Any = n match {
-      case 0 => stats
+      case 0 => gauges
       case _ => throw new IndexOutOfBoundsException(n.toString)
     }
   
-    override def productPrefix: String = "sendStats$args"
+    override def productPrefix: String = "syncGauges$args"
   }
   
-  object sendStats$result extends ThriftStructCodec3[sendStats$result] {
-    val Struct = new TStruct("sendStats_result")
+  object syncGauges$result extends ThriftStructCodec3[syncGauges$result] {
+    val Struct = new TStruct("syncGauges_result")
   
     /**
      * Checks that all required fields are non-null.
      */
-    def validate(_item: sendStats$result) {
+    def validate(_item: syncGauges$result) {
     }
   
-    override def encode(_item: sendStats$result, _oproto: TProtocol) { _item.write(_oproto) }
+    override def encode(_item: syncGauges$result, _oproto: TProtocol) { _item.write(_oproto) }
     override def decode(_iprot: TProtocol) = Immutable.decode(_iprot)
   
-    def apply(_iprot: TProtocol): sendStats$result = decode(_iprot)
+    def apply(_iprot: TProtocol): syncGauges$result = decode(_iprot)
   
     def apply(
-    ): sendStats$result = new Immutable(
+    ): syncGauges$result = new Immutable(
     )
   
-    def unapply(_item: sendStats$result): Boolean = true
+    def unapply(_item: syncGauges$result): Boolean = true
   
-    object Immutable extends ThriftStructCodec3[sendStats$result] {
-      override def encode(_item: sendStats$result, _oproto: TProtocol) { _item.write(_oproto) }
+    object Immutable extends ThriftStructCodec3[syncGauges$result] {
+      override def encode(_item: syncGauges$result, _oproto: TProtocol) { _item.write(_oproto) }
       override def decode(_iprot: TProtocol) = {
         var _done = false
         _iprot.readStructBegin()
@@ -220,35 +684,35 @@ object StatsService {
     }
   
     /**
-     * The default read-only implementation of sendStats$result.  You typically should not need to
-     * directly reference this class; instead, use the sendStats$result.apply method to construct
+     * The default read-only implementation of syncGauges$result.  You typically should not need to
+     * directly reference this class; instead, use the syncGauges$result.apply method to construct
      * new instances.
      */
     class Immutable(
-    ) extends sendStats$result
+    ) extends syncGauges$result
   
   }
   
-  trait sendStats$result extends ThriftStruct
+  trait syncGauges$result extends ThriftStruct
     with Product
     with java.io.Serializable
   {
-    import sendStats$result._
+    import syncGauges$result._
   
   
   
     override def write(_oprot: TProtocol) {
-      sendStats$result.validate(this)
+      syncGauges$result.validate(this)
       _oprot.writeStructBegin(Struct)
       _oprot.writeFieldStop()
       _oprot.writeStructEnd()
     }
   
     def copy(
-    ): sendStats$result = new Immutable(
+    ): syncGauges$result = new Immutable(
     )
   
-    override def canEqual(other: Any): Boolean = other.isInstanceOf[sendStats$result]
+    override def canEqual(other: Any): Boolean = other.isInstanceOf[syncGauges$result]
   
     override def equals(other: Any): Boolean = runtime.ScalaRunTime._equals(this, other)
   
@@ -263,37 +727,37 @@ object StatsService {
       case _ => throw new IndexOutOfBoundsException(n.toString)
     }
   
-    override def productPrefix: String = "sendStats$result"
+    override def productPrefix: String = "syncGauges$result"
   }
   
-  object sendStatuses$args extends ThriftStructCodec3[sendStatuses$args] {
-    val Struct = new TStruct("sendStatuses_args")
-    val StatusesField = new TField("statuses", TType.MAP, 1)
+  object syncLabels$args extends ThriftStructCodec3[syncLabels$args] {
+    val Struct = new TStruct("syncLabels_args")
+    val LabelsField = new TField("labels", TType.MAP, 1)
   
     /**
      * Checks that all required fields are non-null.
      */
-    def validate(_item: sendStatuses$args) {
+    def validate(_item: syncLabels$args) {
     }
   
-    override def encode(_item: sendStatuses$args, _oproto: TProtocol) { _item.write(_oproto) }
+    override def encode(_item: syncLabels$args, _oproto: TProtocol) { _item.write(_oproto) }
     override def decode(_iprot: TProtocol) = Immutable.decode(_iprot)
   
-    def apply(_iprot: TProtocol): sendStatuses$args = decode(_iprot)
+    def apply(_iprot: TProtocol): syncLabels$args = decode(_iprot)
   
     def apply(
-      statuses: Map[String, String] = Map[String, String]()
-    ): sendStatuses$args = new Immutable(
-      statuses
+      labels: Map[String, String] = Map[String, String]()
+    ): syncLabels$args = new Immutable(
+      labels
     )
   
-    def unapply(_item: sendStatuses$args): Option[Map[String, String]] = Some(_item.statuses)
+    def unapply(_item: syncLabels$args): Option[Map[String, String]] = Some(_item.labels)
   
-    object Immutable extends ThriftStructCodec3[sendStatuses$args] {
-      override def encode(_item: sendStatuses$args, _oproto: TProtocol) { _item.write(_oproto) }
+    object Immutable extends ThriftStructCodec3[syncLabels$args] {
+      override def encode(_item: syncLabels$args, _oproto: TProtocol) { _item.write(_oproto) }
       override def decode(_iprot: TProtocol) = {
-        var statuses: Map[String, String] = Map[String, String]()
-        var _got_statuses = false
+        var labels: Map[String, String] = Map[String, String]()
+        var _got_labels = false
         var _done = false
         _iprot.readStructBegin()
         while (!_done) {
@@ -302,10 +766,10 @@ object StatsService {
             _done = true
           } else {
             _field.id match {
-              case 1 => { /* statuses */
+              case 1 => { /* labels */
                 _field.`type` match {
                   case TType.MAP => {
-                    statuses = {
+                    labels = {
                       val _map = _iprot.readMapBegin()
                       val _rv = new mutable.HashMap[String, String]
                       var _i = 0
@@ -322,7 +786,7 @@ object StatsService {
                       _iprot.readMapEnd()
                       _rv
                     }
-                    _got_statuses = true
+                    _got_labels = true
                   }
                   case _ => TProtocolUtil.skip(_iprot, _field.`type`)
                 }
@@ -334,44 +798,44 @@ object StatsService {
         }
         _iprot.readStructEnd()
         new Immutable(
-          statuses
+          labels
         )
       }
     }
   
     /**
-     * The default read-only implementation of sendStatuses$args.  You typically should not need to
-     * directly reference this class; instead, use the sendStatuses$args.apply method to construct
+     * The default read-only implementation of syncLabels$args.  You typically should not need to
+     * directly reference this class; instead, use the syncLabels$args.apply method to construct
      * new instances.
      */
     class Immutable(
-      val statuses: Map[String, String] = Map[String, String]()
-    ) extends sendStatuses$args
+      val labels: Map[String, String] = Map[String, String]()
+    ) extends syncLabels$args
   
   }
   
-  trait sendStatuses$args extends ThriftStruct
+  trait syncLabels$args extends ThriftStruct
     with Product1[Map[String, String]]
     with java.io.Serializable
   {
-    import sendStatuses$args._
+    import syncLabels$args._
   
-    def statuses: Map[String, String]
+    def labels: Map[String, String]
   
-    def _1 = statuses
+    def _1 = labels
   
     override def write(_oprot: TProtocol) {
-      sendStatuses$args.validate(this)
+      syncLabels$args.validate(this)
       _oprot.writeStructBegin(Struct)
       if (true) {
-        val statuses_item = statuses
-        _oprot.writeFieldBegin(StatusesField)
-        _oprot.writeMapBegin(new TMap(TType.STRING, TType.STRING, statuses_item.size))
-        statuses_item.foreach { _pair =>
-          val statuses_item_key = _pair._1
-          val statuses_item_value = _pair._2
-          _oprot.writeString(statuses_item_key)
-          _oprot.writeString(statuses_item_value)
+        val labels_item = labels
+        _oprot.writeFieldBegin(LabelsField)
+        _oprot.writeMapBegin(new TMap(TType.STRING, TType.STRING, labels_item.size))
+        labels_item.foreach { _pair =>
+          val labels_item_key = _pair._1
+          val labels_item_value = _pair._2
+          _oprot.writeString(labels_item_key)
+          _oprot.writeString(labels_item_value)
         }
         _oprot.writeMapEnd()
         _oprot.writeFieldEnd()
@@ -381,12 +845,12 @@ object StatsService {
     }
   
     def copy(
-      statuses: Map[String, String] = this.statuses
-    ): sendStatuses$args = new Immutable(
-      statuses
+      labels: Map[String, String] = this.labels
+    ): syncLabels$args = new Immutable(
+      labels
     )
   
-    override def canEqual(other: Any): Boolean = other.isInstanceOf[sendStatuses$args]
+    override def canEqual(other: Any): Boolean = other.isInstanceOf[syncLabels$args]
   
     override def equals(other: Any): Boolean = runtime.ScalaRunTime._equals(this, other)
   
@@ -398,35 +862,35 @@ object StatsService {
     override def productArity: Int = 1
   
     override def productElement(n: Int): Any = n match {
-      case 0 => statuses
+      case 0 => labels
       case _ => throw new IndexOutOfBoundsException(n.toString)
     }
   
-    override def productPrefix: String = "sendStatuses$args"
+    override def productPrefix: String = "syncLabels$args"
   }
   
-  object sendStatuses$result extends ThriftStructCodec3[sendStatuses$result] {
-    val Struct = new TStruct("sendStatuses_result")
+  object syncLabels$result extends ThriftStructCodec3[syncLabels$result] {
+    val Struct = new TStruct("syncLabels_result")
   
     /**
      * Checks that all required fields are non-null.
      */
-    def validate(_item: sendStatuses$result) {
+    def validate(_item: syncLabels$result) {
     }
   
-    override def encode(_item: sendStatuses$result, _oproto: TProtocol) { _item.write(_oproto) }
+    override def encode(_item: syncLabels$result, _oproto: TProtocol) { _item.write(_oproto) }
     override def decode(_iprot: TProtocol) = Immutable.decode(_iprot)
   
-    def apply(_iprot: TProtocol): sendStatuses$result = decode(_iprot)
+    def apply(_iprot: TProtocol): syncLabels$result = decode(_iprot)
   
     def apply(
-    ): sendStatuses$result = new Immutable(
+    ): syncLabels$result = new Immutable(
     )
   
-    def unapply(_item: sendStatuses$result): Boolean = true
+    def unapply(_item: syncLabels$result): Boolean = true
   
-    object Immutable extends ThriftStructCodec3[sendStatuses$result] {
-      override def encode(_item: sendStatuses$result, _oproto: TProtocol) { _item.write(_oproto) }
+    object Immutable extends ThriftStructCodec3[syncLabels$result] {
+      override def encode(_item: syncLabels$result, _oproto: TProtocol) { _item.write(_oproto) }
       override def decode(_iprot: TProtocol) = {
         var _done = false
         _iprot.readStructBegin()
@@ -448,35 +912,35 @@ object StatsService {
     }
   
     /**
-     * The default read-only implementation of sendStatuses$result.  You typically should not need to
-     * directly reference this class; instead, use the sendStatuses$result.apply method to construct
+     * The default read-only implementation of syncLabels$result.  You typically should not need to
+     * directly reference this class; instead, use the syncLabels$result.apply method to construct
      * new instances.
      */
     class Immutable(
-    ) extends sendStatuses$result
+    ) extends syncLabels$result
   
   }
   
-  trait sendStatuses$result extends ThriftStruct
+  trait syncLabels$result extends ThriftStruct
     with Product
     with java.io.Serializable
   {
-    import sendStatuses$result._
+    import syncLabels$result._
   
   
   
     override def write(_oprot: TProtocol) {
-      sendStatuses$result.validate(this)
+      syncLabels$result.validate(this)
       _oprot.writeStructBegin(Struct)
       _oprot.writeFieldStop()
       _oprot.writeStructEnd()
     }
   
     def copy(
-    ): sendStatuses$result = new Immutable(
+    ): syncLabels$result = new Immutable(
     )
   
-    override def canEqual(other: Any): Boolean = other.isInstanceOf[sendStatuses$result]
+    override def canEqual(other: Any): Boolean = other.isInstanceOf[syncLabels$result]
   
     override def equals(other: Any): Boolean = runtime.ScalaRunTime._equals(this, other)
   
@@ -491,7 +955,7 @@ object StatsService {
       case _ => throw new IndexOutOfBoundsException(n.toString)
     }
   
-    override def productPrefix: String = "sendStatuses$result"
+    override def productPrefix: String = "syncLabels$result"
   }
 
   
@@ -545,18 +1009,18 @@ object StatsService {
     // ----- end boilerplate.
   
     private[this] val scopedStats = if (serviceName != "") stats.scope(serviceName) else stats
-    private[this] object __stats_sendStats {
-      val RequestsCounter = scopedStats.scope("sendStats").counter("requests")
-      val SuccessCounter = scopedStats.scope("sendStats").counter("success")
-      val FailuresCounter = scopedStats.scope("sendStats").counter("failures")
-      val FailuresScope = scopedStats.scope("sendStats").scope("failures")
+    private[this] object __stats_syncCounters {
+      val RequestsCounter = scopedStats.scope("syncCounters").counter("requests")
+      val SuccessCounter = scopedStats.scope("syncCounters").counter("success")
+      val FailuresCounter = scopedStats.scope("syncCounters").counter("failures")
+      val FailuresScope = scopedStats.scope("syncCounters").scope("failures")
     }
   
   
-    def sendStats(stats: Map[String, Double] = Map[String, Double]()): Future[Unit] = {
-      __stats_sendStats.RequestsCounter.incr()
-      this.service(encodeRequest("sendStats", sendStats$args(stats))) flatMap { response =>
-        val result = decodeResponse(response, sendStats$result)
+    def syncCounters(counters: Map[String, Long] = Map[String, Long]()): Future[Unit] = {
+      __stats_syncCounters.RequestsCounter.incr()
+      this.service(encodeRequest("syncCounters", syncCounters$args(counters))) flatMap { response =>
+        val result = decodeResponse(response, syncCounters$result)
         val exception =
           None
         exception.getOrElse(Future.Done)
@@ -566,24 +1030,24 @@ object StatsService {
           Future.exception(ex)
         }
       } onSuccess { _ =>
-        __stats_sendStats.SuccessCounter.incr()
+        __stats_syncCounters.SuccessCounter.incr()
       } onFailure { ex =>
-        __stats_sendStats.FailuresCounter.incr()
-        __stats_sendStats.FailuresScope.counter(ex.getClass.getName).incr()
+        __stats_syncCounters.FailuresCounter.incr()
+        __stats_syncCounters.FailuresScope.counter(ex.getClass.getName).incr()
       }
     }
-    private[this] object __stats_sendStatuses {
-      val RequestsCounter = scopedStats.scope("sendStatuses").counter("requests")
-      val SuccessCounter = scopedStats.scope("sendStatuses").counter("success")
-      val FailuresCounter = scopedStats.scope("sendStatuses").counter("failures")
-      val FailuresScope = scopedStats.scope("sendStatuses").scope("failures")
+    private[this] object __stats_syncMetrics {
+      val RequestsCounter = scopedStats.scope("syncMetrics").counter("requests")
+      val SuccessCounter = scopedStats.scope("syncMetrics").counter("success")
+      val FailuresCounter = scopedStats.scope("syncMetrics").counter("failures")
+      val FailuresScope = scopedStats.scope("syncMetrics").scope("failures")
     }
   
   
-    def sendStatuses(statuses: Map[String, String] = Map[String, String]()): Future[Unit] = {
-      __stats_sendStatuses.RequestsCounter.incr()
-      this.service(encodeRequest("sendStatuses", sendStatuses$args(statuses))) flatMap { response =>
-        val result = decodeResponse(response, sendStatuses$result)
+    def syncMetrics(metrics: Map[String, Distribution] = Map[String, Distribution]()): Future[Unit] = {
+      __stats_syncMetrics.RequestsCounter.incr()
+      this.service(encodeRequest("syncMetrics", syncMetrics$args(metrics))) flatMap { response =>
+        val result = decodeResponse(response, syncMetrics$result)
         val exception =
           None
         exception.getOrElse(Future.Done)
@@ -593,10 +1057,64 @@ object StatsService {
           Future.exception(ex)
         }
       } onSuccess { _ =>
-        __stats_sendStatuses.SuccessCounter.incr()
+        __stats_syncMetrics.SuccessCounter.incr()
       } onFailure { ex =>
-        __stats_sendStatuses.FailuresCounter.incr()
-        __stats_sendStatuses.FailuresScope.counter(ex.getClass.getName).incr()
+        __stats_syncMetrics.FailuresCounter.incr()
+        __stats_syncMetrics.FailuresScope.counter(ex.getClass.getName).incr()
+      }
+    }
+    private[this] object __stats_syncGauges {
+      val RequestsCounter = scopedStats.scope("syncGauges").counter("requests")
+      val SuccessCounter = scopedStats.scope("syncGauges").counter("success")
+      val FailuresCounter = scopedStats.scope("syncGauges").counter("failures")
+      val FailuresScope = scopedStats.scope("syncGauges").scope("failures")
+    }
+  
+  
+    def syncGauges(gauges: Map[String, Double] = Map[String, Double]()): Future[Unit] = {
+      __stats_syncGauges.RequestsCounter.incr()
+      this.service(encodeRequest("syncGauges", syncGauges$args(gauges))) flatMap { response =>
+        val result = decodeResponse(response, syncGauges$result)
+        val exception =
+          None
+        exception.getOrElse(Future.Done)
+      } rescue {
+        case ex: SourcedException => {
+          if (this.serviceName != "") { ex.serviceName = this.serviceName }
+          Future.exception(ex)
+        }
+      } onSuccess { _ =>
+        __stats_syncGauges.SuccessCounter.incr()
+      } onFailure { ex =>
+        __stats_syncGauges.FailuresCounter.incr()
+        __stats_syncGauges.FailuresScope.counter(ex.getClass.getName).incr()
+      }
+    }
+    private[this] object __stats_syncLabels {
+      val RequestsCounter = scopedStats.scope("syncLabels").counter("requests")
+      val SuccessCounter = scopedStats.scope("syncLabels").counter("success")
+      val FailuresCounter = scopedStats.scope("syncLabels").counter("failures")
+      val FailuresScope = scopedStats.scope("syncLabels").scope("failures")
+    }
+  
+  
+    def syncLabels(labels: Map[String, String] = Map[String, String]()): Future[Unit] = {
+      __stats_syncLabels.RequestsCounter.incr()
+      this.service(encodeRequest("syncLabels", syncLabels$args(labels))) flatMap { response =>
+        val result = decodeResponse(response, syncLabels$result)
+        val exception =
+          None
+        exception.getOrElse(Future.Done)
+      } rescue {
+        case ex: SourcedException => {
+          if (this.serviceName != "") { ex.serviceName = this.serviceName }
+          Future.exception(ex)
+        }
+      } onSuccess { _ =>
+        __stats_syncLabels.SuccessCounter.incr()
+      } onFailure { ex =>
+        __stats_syncLabels.FailuresCounter.incr()
+        __stats_syncLabels.FailuresScope.counter(ex.getClass.getName).incr()
       }
     }
   }
@@ -662,44 +1180,86 @@ object StatsService {
   
     // ---- end boilerplate.
   
-    addFunction("sendStats", { (iprot: TProtocol, seqid: Int) =>
+    addFunction("syncCounters", { (iprot: TProtocol, seqid: Int) =>
       try {
-        val args = sendStats$args.decode(iprot)
+        val args = syncCounters$args.decode(iprot)
         iprot.readMessageEnd()
         (try {
-          iface.sendStats(args.stats)
+          iface.syncCounters(args.counters)
         } catch {
           case e: Exception => Future.exception(e)
         }) flatMap { value: Unit =>
-          reply("sendStats", seqid, sendStats$result())
+          reply("syncCounters", seqid, syncCounters$result())
         } rescue {
           case e => Future.exception(e)
         }
       } catch {
         case e: TProtocolException => {
           iprot.readMessageEnd()
-          exception("sendStats", seqid, TApplicationException.PROTOCOL_ERROR, e.getMessage)
+          exception("syncCounters", seqid, TApplicationException.PROTOCOL_ERROR, e.getMessage)
         }
         case e: Exception => Future.exception(e)
       }
     })
-    addFunction("sendStatuses", { (iprot: TProtocol, seqid: Int) =>
+    addFunction("syncMetrics", { (iprot: TProtocol, seqid: Int) =>
       try {
-        val args = sendStatuses$args.decode(iprot)
+        val args = syncMetrics$args.decode(iprot)
         iprot.readMessageEnd()
         (try {
-          iface.sendStatuses(args.statuses)
+          iface.syncMetrics(args.metrics)
         } catch {
           case e: Exception => Future.exception(e)
         }) flatMap { value: Unit =>
-          reply("sendStatuses", seqid, sendStatuses$result())
+          reply("syncMetrics", seqid, syncMetrics$result())
         } rescue {
           case e => Future.exception(e)
         }
       } catch {
         case e: TProtocolException => {
           iprot.readMessageEnd()
-          exception("sendStatuses", seqid, TApplicationException.PROTOCOL_ERROR, e.getMessage)
+          exception("syncMetrics", seqid, TApplicationException.PROTOCOL_ERROR, e.getMessage)
+        }
+        case e: Exception => Future.exception(e)
+      }
+    })
+    addFunction("syncGauges", { (iprot: TProtocol, seqid: Int) =>
+      try {
+        val args = syncGauges$args.decode(iprot)
+        iprot.readMessageEnd()
+        (try {
+          iface.syncGauges(args.gauges)
+        } catch {
+          case e: Exception => Future.exception(e)
+        }) flatMap { value: Unit =>
+          reply("syncGauges", seqid, syncGauges$result())
+        } rescue {
+          case e => Future.exception(e)
+        }
+      } catch {
+        case e: TProtocolException => {
+          iprot.readMessageEnd()
+          exception("syncGauges", seqid, TApplicationException.PROTOCOL_ERROR, e.getMessage)
+        }
+        case e: Exception => Future.exception(e)
+      }
+    })
+    addFunction("syncLabels", { (iprot: TProtocol, seqid: Int) =>
+      try {
+        val args = syncLabels$args.decode(iprot)
+        iprot.readMessageEnd()
+        (try {
+          iface.syncLabels(args.labels)
+        } catch {
+          case e: Exception => Future.exception(e)
+        }) flatMap { value: Unit =>
+          reply("syncLabels", seqid, syncLabels$result())
+        } rescue {
+          case e => Future.exception(e)
+        }
+      } catch {
+        case e: TProtocolException => {
+          iprot.readMessageEnd()
+          exception("syncLabels", seqid, TApplicationException.PROTOCOL_ERROR, e.getMessage)
         }
         case e: Exception => Future.exception(e)
       }
