@@ -12,7 +12,7 @@ object Struthio extends Build {
     id = "struthio",
     base = file(".")
   )
-    .aggregate(core, thrift)
+    .aggregate(core, thrift, server)
     .settings(sharedSettings: _*)
 
   def quickProject(string: String): Project = {
@@ -35,4 +35,8 @@ object Struthio extends Build {
     .settings(libraryDependencies ++= Seq(
       "com.twitter" %% "scrooge-runtime" % "3.1.1" cross CrossVersion.binary
     ))
+
+  lazy val server = quickProject("server")
+    .settings(sharedSettings: _*)
+    .dependsOn(core)
 }
