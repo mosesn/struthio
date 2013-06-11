@@ -2,7 +2,7 @@
 [ABANDONED] syncs ostrich stats remotely
 
 ## demotivation
-[ostrich](/twitter/ostrich) is deprecated :(
+[ostrich](http://github.com/twitter/ostrich) is deprecated :(
 
 ## motivation
 Ostrich stats can be used to understand the health of a cluster, but they need to leave
